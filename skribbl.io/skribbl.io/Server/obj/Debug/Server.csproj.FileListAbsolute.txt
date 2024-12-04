@@ -1,0 +1,8 @@
+C:\Users\NIKOLARAHOVIC\Documents\GitHub\skribbl.io\skribbl.io\skribbl.io\Server\obj\Debug\Server.csproj.AssemblyReference.cache
+C:\Users\NIKOLARAHOVIC\Documents\GitHub\skribbl.io\skribbl.io\skribbl.io\Server\obj\Debug\Server.csproj.SuggestedBindingRedirects.cache
+C:\Users\NIKOLARAHOVIC\Documents\GitHub\skribbl.io\skribbl.io\skribbl.io\Server\obj\Debug\Server.csproj.CoreCompileInputs.cache
+C:\Users\NIKOLARAHOVIC\Documents\GitHub\skribbl.io\skribbl.io\skribbl.io\Server\bin\Debug\Server.exe.config
+C:\Users\NIKOLARAHOVIC\Documents\GitHub\skribbl.io\skribbl.io\skribbl.io\Server\bin\Debug\Server.exe
+C:\Users\NIKOLARAHOVIC\Documents\GitHub\skribbl.io\skribbl.io\skribbl.io\Server\bin\Debug\Server.pdb
+C:\Users\NIKOLARAHOVIC\Documents\GitHub\skribbl.io\skribbl.io\skribbl.io\Server\obj\Debug\Server.exe
+C:\Users\NIKOLARAHOVIC\Documents\GitHub\skribbl.io\skribbl.io\skribbl.io\Server\obj\Debug\Server.pdb
