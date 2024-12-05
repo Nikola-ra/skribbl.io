@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -12,6 +13,8 @@ namespace server
         private TcpListener _listener;
         private readonly List<TcpClient> _clients = new List<TcpClient>();
         private readonly object _lock = new object(); // For thread safety
+        string correct = "agazzi";
+
 
         public static void Main(string[] args)
         {
@@ -30,7 +33,8 @@ namespace server
                 TcpClient client = _listener.AcceptTcpClient();
                 lock (_lock)
                 {
-                    _clients.Add(client);
+                    if (_clients.Count < 2) _clients.Add(client);
+                    else Console.WriteLine("Too many clients!");
                 }
 
                 Console.WriteLine("Client connected...");
@@ -51,8 +55,9 @@ namespace server
                 while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) != 0)
                 {
                     string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                    if (IsWin(message)) Console.WriteLine("Hai vinto");
                     Console.WriteLine($"Received: {message}");
-                    Broadcast(message, client);
+                    Broadcast(message+"\n", client);
                 }
             }
             catch (Exception ex)
@@ -93,6 +98,14 @@ namespace server
                     }
                 }
             }
+        }
+
+        private bool IsWin(string message)
+        {
+            var data = JsonConvert.DeserializeObject<dynamic>(message);
+            if (data == null) return false;
+            if (data.type == "guess" && data.word == correct) return true;
+            return false;
         }
     }
 }

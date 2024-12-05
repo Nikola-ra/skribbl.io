@@ -71,12 +71,11 @@ namespace GameClient
             // 
             this.roundLabel.Location = new System.Drawing.Point(200, 10);
             this.roundLabel.Name = "roundLabel";
-            this.roundLabel.Size = new System.Drawing.Size(100, 23);
+            this.roundLabel.Size = new System.Drawing.Size(91, 23);
             this.roundLabel.TabIndex = 2;
             this.roundLabel.Text = "Round 1 | 30 seconds left";
             // 
             // statusLabel
-            // 
             // 
             this.statusLabel.Location = new System.Drawing.Point(400, 10);
             this.statusLabel.Name = "statusLabel";
@@ -95,18 +94,18 @@ namespace GameClient
             // 
             // colorPickerButton
             // 
-            this.colorPickerButton.Location = new System.Drawing.Point(0, 0);
+            this.colorPickerButton.Location = new System.Drawing.Point(3, 84);
             this.colorPickerButton.Name = "colorPickerButton";
-            this.colorPickerButton.Size = new System.Drawing.Size(75, 23);
+            this.colorPickerButton.Size = new System.Drawing.Size(97, 38);
             this.colorPickerButton.TabIndex = 0;
             this.colorPickerButton.Text = "Color";
             // 
             // penSizeSlider
             // 
-            this.penSizeSlider.Location = new System.Drawing.Point(0, 0);
+            this.penSizeSlider.Location = new System.Drawing.Point(0, 22);
             this.penSizeSlider.Minimum = 1;
             this.penSizeSlider.Name = "penSizeSlider";
-            this.penSizeSlider.Size = new System.Drawing.Size(104, 45);
+            this.penSizeSlider.Size = new System.Drawing.Size(104, 56);
             this.penSizeSlider.TabIndex = 1;
             this.penSizeSlider.Value = 1;
             // 
@@ -114,7 +113,7 @@ namespace GameClient
             // 
             this.guessTextBox.Location = new System.Drawing.Point(150, 470);
             this.guessTextBox.Name = "guessTextBox";
-            this.guessTextBox.Size = new System.Drawing.Size(100, 20);
+            this.guessTextBox.Size = new System.Drawing.Size(100, 22);
             this.guessTextBox.TabIndex = 5;
             // 
             // guessButton
@@ -124,20 +123,22 @@ namespace GameClient
             this.guessButton.Size = new System.Drawing.Size(75, 23);
             this.guessButton.TabIndex = 6;
             this.guessButton.Text = "Submit";
-
+            this.guessButton.Click += new System.EventHandler(this.guessButton_Click_1);
             // 
             // guessesList
             // 
+            this.guessesList.ItemHeight = 16;
             this.guessesList.Location = new System.Drawing.Point(650, 50);
             this.guessesList.Name = "guessesList";
-            this.guessesList.Size = new System.Drawing.Size(200, 394);
+            this.guessesList.Size = new System.Drawing.Size(200, 388);
             this.guessesList.TabIndex = 7;
             // 
             // wordOptions
             // 
+            this.wordOptions.ItemHeight = 16;
             this.wordOptions.Location = new System.Drawing.Point(200, 200);
             this.wordOptions.Name = "wordOptions";
-            this.wordOptions.Size = new System.Drawing.Size(200, 95);
+            this.wordOptions.Size = new System.Drawing.Size(200, 84);
             this.wordOptions.TabIndex = 8;
             this.wordOptions.Visible = false;
             // 
