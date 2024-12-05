@@ -23,11 +23,12 @@ namespace GameClient
         private Button guessButton;
         private ListBox guessesList;
         private ListBox wordOptions;
-        private TextBox playerNameTextBox;
+        /*private TextBox playerNameTextBox;
         private TextBox serverIpTextBox;
-        private Button connectButton; // To connect after entering name
-        private Label nameLabel;
+        private Button connectButton; 
+        private Label nameLabel;*/
 
+        ColorDialog colorDialog = new ColorDialog();
 
         private TcpClient _client;
         private NetworkStream _stream;
@@ -244,6 +245,19 @@ namespace GameClient
 
             SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message));
             guessTextBox.Clear();
+        }
+
+        private void colorPickerButton_Click(object sender, EventArgs e)
+        {
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                _pen.Color = colorDialog.Color;
+            }
+        }
+
+        private void penSizeSlider_Scroll(object sender, EventArgs e)
+        {
+            _pen.Width = penSizeSlider.Value;
         }
     }
 }

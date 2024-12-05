@@ -99,21 +99,24 @@ namespace GameClient
             this.colorPickerButton.Size = new System.Drawing.Size(97, 38);
             this.colorPickerButton.TabIndex = 0;
             this.colorPickerButton.Text = "Color";
+            this.colorPickerButton.Click += new System.EventHandler(this.colorPickerButton_Click);
             // 
             // penSizeSlider
             // 
             this.penSizeSlider.Location = new System.Drawing.Point(0, 22);
+            this.penSizeSlider.Maximum = 30;
             this.penSizeSlider.Minimum = 1;
             this.penSizeSlider.Name = "penSizeSlider";
-            this.penSizeSlider.Size = new System.Drawing.Size(104, 56);
+            this.penSizeSlider.Size = new System.Drawing.Size(104, 45);
             this.penSizeSlider.TabIndex = 1;
             this.penSizeSlider.Value = 1;
+            this.penSizeSlider.Scroll += new System.EventHandler(this.penSizeSlider_Scroll);
             // 
             // guessTextBox
             // 
             this.guessTextBox.Location = new System.Drawing.Point(150, 470);
             this.guessTextBox.Name = "guessTextBox";
-            this.guessTextBox.Size = new System.Drawing.Size(100, 22);
+            this.guessTextBox.Size = new System.Drawing.Size(100, 20);
             this.guessTextBox.TabIndex = 5;
             // 
             // guessButton
@@ -127,18 +130,16 @@ namespace GameClient
             // 
             // guessesList
             // 
-            this.guessesList.ItemHeight = 16;
             this.guessesList.Location = new System.Drawing.Point(650, 50);
             this.guessesList.Name = "guessesList";
-            this.guessesList.Size = new System.Drawing.Size(200, 388);
+            this.guessesList.Size = new System.Drawing.Size(200, 381);
             this.guessesList.TabIndex = 7;
             // 
             // wordOptions
             // 
-            this.wordOptions.ItemHeight = 16;
             this.wordOptions.Location = new System.Drawing.Point(200, 200);
             this.wordOptions.Name = "wordOptions";
-            this.wordOptions.Size = new System.Drawing.Size(200, 84);
+            this.wordOptions.Size = new System.Drawing.Size(200, 82);
             this.wordOptions.TabIndex = 8;
             this.wordOptions.Visible = false;
             // 
