@@ -36,8 +36,6 @@ namespace GameClient
         {
             this.canvas = new System.Windows.Forms.PictureBox();
             this.roleLabel = new System.Windows.Forms.Label();
-            this.roundLabel = new System.Windows.Forms.Label();
-            this.statusLabel = new System.Windows.Forms.Label();
             this.toolboxPanel = new System.Windows.Forms.Panel();
             this.colorPickerButton = new System.Windows.Forms.Button();
             this.penSizeSlider = new System.Windows.Forms.TrackBar();
@@ -45,6 +43,7 @@ namespace GameClient
             this.guessButton = new System.Windows.Forms.Button();
             this.guessesList = new System.Windows.Forms.ListBox();
             this.wordOptions = new System.Windows.Forms.ListBox();
+            this.PlayerName = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.toolboxPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.penSizeSlider)).BeginInit();
@@ -61,27 +60,11 @@ namespace GameClient
             // 
             // roleLabel
             // 
-            this.roleLabel.Location = new System.Drawing.Point(20, 10);
+            this.roleLabel.Location = new System.Drawing.Point(647, 9);
             this.roleLabel.Name = "roleLabel";
             this.roleLabel.Size = new System.Drawing.Size(100, 23);
             this.roleLabel.TabIndex = 1;
-            this.roleLabel.Text = "Your Role: Guesser";
-            // 
-            // roundLabel
-            // 
-            this.roundLabel.Location = new System.Drawing.Point(200, 10);
-            this.roundLabel.Name = "roundLabel";
-            this.roundLabel.Size = new System.Drawing.Size(91, 23);
-            this.roundLabel.TabIndex = 2;
-            this.roundLabel.Text = "Round 1 | 30 seconds left";
-            // 
-            // statusLabel
-            // 
-            this.statusLabel.Location = new System.Drawing.Point(400, 10);
-            this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(100, 23);
-            this.statusLabel.TabIndex = 3;
-            this.statusLabel.Text = "Waiting for guesser...";
+            this.roleLabel.Text = "Your Role:";
             // 
             // toolboxPanel
             // 
@@ -107,7 +90,7 @@ namespace GameClient
             this.penSizeSlider.Maximum = 30;
             this.penSizeSlider.Minimum = 1;
             this.penSizeSlider.Name = "penSizeSlider";
-            this.penSizeSlider.Size = new System.Drawing.Size(104, 45);
+            this.penSizeSlider.Size = new System.Drawing.Size(104, 56);
             this.penSizeSlider.TabIndex = 1;
             this.penSizeSlider.Value = 1;
             this.penSizeSlider.Scroll += new System.EventHandler(this.penSizeSlider_Scroll);
@@ -116,7 +99,7 @@ namespace GameClient
             // 
             this.guessTextBox.Location = new System.Drawing.Point(150, 470);
             this.guessTextBox.Name = "guessTextBox";
-            this.guessTextBox.Size = new System.Drawing.Size(100, 20);
+            this.guessTextBox.Size = new System.Drawing.Size(100, 22);
             this.guessTextBox.TabIndex = 5;
             // 
             // guessButton
@@ -130,26 +113,37 @@ namespace GameClient
             // 
             // guessesList
             // 
+            this.guessesList.ItemHeight = 16;
             this.guessesList.Location = new System.Drawing.Point(650, 50);
             this.guessesList.Name = "guessesList";
-            this.guessesList.Size = new System.Drawing.Size(200, 381);
+            this.guessesList.Size = new System.Drawing.Size(200, 372);
             this.guessesList.TabIndex = 7;
             // 
             // wordOptions
             // 
+            this.wordOptions.ItemHeight = 16;
             this.wordOptions.Location = new System.Drawing.Point(200, 200);
             this.wordOptions.Name = "wordOptions";
-            this.wordOptions.Size = new System.Drawing.Size(200, 82);
+            this.wordOptions.Size = new System.Drawing.Size(200, 68);
             this.wordOptions.TabIndex = 8;
-            this.wordOptions.Visible = false;
+            this.wordOptions.Text = "awoiudhaowhfoihowahf";
+            // 
+            // PlayerName
+            // 
+            this.PlayerName.AutoSize = true;
+            this.PlayerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PlayerName.Location = new System.Drawing.Point(20, 9);
+            this.PlayerName.Name = "PlayerName";
+            this.PlayerName.Size = new System.Drawing.Size(123, 24);
+            this.PlayerName.TabIndex = 9;
+            this.PlayerName.Text = "PlayerName";
             // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(917, 605);
+            this.Controls.Add(this.PlayerName);
             this.Controls.Add(this.canvas);
             this.Controls.Add(this.roleLabel);
-            this.Controls.Add(this.roundLabel);
-            this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.toolboxPanel);
             this.Controls.Add(this.guessTextBox);
             this.Controls.Add(this.guessButton);
@@ -166,6 +160,8 @@ namespace GameClient
         }
 
         #endregion
+
+        private Label PlayerName;
     }
 }
 

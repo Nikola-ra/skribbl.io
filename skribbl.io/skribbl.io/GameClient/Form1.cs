@@ -14,8 +14,6 @@ namespace GameClient
     {
         private PictureBox canvas;
         private Label roleLabel;
-        private Label roundLabel;
-        private Label statusLabel;
         private Panel toolboxPanel;
         private Button colorPickerButton;
         private TrackBar penSizeSlider;
@@ -23,10 +21,8 @@ namespace GameClient
         private Button guessButton;
         private ListBox guessesList;
         private ListBox wordOptions;
-        /*private TextBox playerNameTextBox;
-        private TextBox serverIpTextBox;
-        private Button connectButton; 
-        private Label nameLabel;*/
+        /*private TextBox serverIpTextBox;
+        private Button connectButton; */
 
         ColorDialog colorDialog = new ColorDialog();
 
@@ -44,6 +40,7 @@ namespace GameClient
         public Form1()
         {
             InitializeComponent();
+            _pen.StartCap = _pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
             InitializeGame();
             ConnectToServer("127.0.0.1");
         }
@@ -128,6 +125,17 @@ namespace GameClient
             {
                 var data = JsonConvert.DeserializeObject<dynamic>(message);
 
+                if (data.type == "role")
+                {
+                    if (data.message == "Drawer")
+                    {
+                        SetDrawerUI();
+                    }else
+                    {
+                        SetGuesserUI();
+                    }
+                }
+
                 if (data.type == "draw")
                 {
                     DrawFromServer((int)data.x1, (int)data.y1, (int)data.x2, (int)data.y2,
@@ -161,6 +169,7 @@ namespace GameClient
             var pen = new Pen(color, size);
             using (var g = canvas.CreateGraphics())
             {
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 g.DrawLine(pen, x1, y1, x2, y2);
             }
         }
@@ -259,5 +268,25 @@ namespace GameClient
         {
             _pen.Width = penSizeSlider.Value;
         }
+
+        private void SetGuesserUI()
+        {
+            canvas.Enabled = false; // Disable drawing
+            colorPickerButton.Visible = false;
+            wordOptions.Visible = false;
+            guessTextBox.Enabled = true; // Allow guessing
+            roleLabel.Text = "You are the Guesser!";
+        }
+
+        private void SetDrawerUI()
+        {
+            canvas.Enabled = true; // Allow drawing
+            colorPickerButton.Visible = true;
+            wordOptions.Visible = true;
+            guessTextBox.Enabled = false; // Disable guessing
+            roleLabel.Text = "You are the Drawer!";
+        }
+
+
     }
 }

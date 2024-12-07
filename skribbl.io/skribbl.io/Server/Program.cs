@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -50,6 +51,14 @@ namespace server
             byte[] buffer = new byte[1024];
             int bytesRead;
 
+            string role;
+
+            role = _clients.Count == 0 ? "Drawer" : "Guesser";
+
+
+            string roleMessage = JsonConvert.SerializeObject(new { type = "role", message = role });
+            byte[] roleData = Encoding.UTF8.GetBytes(roleMessage + "\n");
+            stream.Write(roleData, 0, roleData.Length);
             try
             {
                 while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) != 0)
@@ -74,6 +83,11 @@ namespace server
                 client.Close();
                 Console.WriteLine("Client disconnected...");
             }
+        }
+
+        private void GiveRoles() 
+        {
+            
         }
 
         private void Broadcast(string message, TcpClient sender)
