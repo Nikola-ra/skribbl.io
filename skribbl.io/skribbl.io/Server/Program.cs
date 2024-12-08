@@ -83,6 +83,7 @@ namespace server
                     {
                         try
                         {
+                            Console.WriteLine($"Recieved: {message}");
                             // Broadcast all received messages (drawing, guesses, etc.)
                             Broadcast(message + "\n", client);
                             if (IsWin(message)) Console.WriteLine("Hai vinto");

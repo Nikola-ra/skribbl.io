@@ -261,7 +261,7 @@ namespace GameClient
         {
             try
             {
-                byte[] data = Encoding.UTF8.GetBytes(message);
+                byte[] data = Encoding.UTF8.GetBytes(message + "\n");
                 _stream.Write(data, 0, data.Length);
             }
             catch (Exception ex)
