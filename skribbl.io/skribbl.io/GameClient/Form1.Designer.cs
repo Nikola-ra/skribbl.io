@@ -34,134 +34,124 @@ namespace GameClient
         /// </summary>
         private void InitializeComponent()
         {
-            this.canvas = new System.Windows.Forms.PictureBox();
-            this.roleLabel = new System.Windows.Forms.Label();
-            this.toolboxPanel = new System.Windows.Forms.Panel();
-            this.colorPickerButton = new System.Windows.Forms.Button();
             this.penSizeSlider = new System.Windows.Forms.TrackBar();
-            this.guessTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.canvas = new System.Windows.Forms.PictureBox();
             this.guessButton = new System.Windows.Forms.Button();
-            this.guessesList = new System.Windows.Forms.ListBox();
-            this.wordOptions = new System.Windows.Forms.ListBox();
-            this.PlayerName = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
-            this.toolboxPanel.SuspendLayout();
+            this.guessTextBox = new System.Windows.Forms.TextBox();
+            this.colorPickerButton = new System.Windows.Forms.Button();
+            this.roleLabel = new System.Windows.Forms.Label();
+            this.eraserButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.penSizeSlider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.SuspendLayout();
-            // 
-            // canvas
-            // 
-            this.canvas.BackColor = System.Drawing.Color.White;
-            this.canvas.Location = new System.Drawing.Point(150, 50);
-            this.canvas.Name = "canvas";
-            this.canvas.Size = new System.Drawing.Size(500, 400);
-            this.canvas.TabIndex = 0;
-            this.canvas.TabStop = false;
-            // 
-            // roleLabel
-            // 
-            this.roleLabel.Location = new System.Drawing.Point(647, 9);
-            this.roleLabel.Name = "roleLabel";
-            this.roleLabel.Size = new System.Drawing.Size(100, 23);
-            this.roleLabel.TabIndex = 1;
-            this.roleLabel.Text = "Your Role:";
-            // 
-            // toolboxPanel
-            // 
-            this.toolboxPanel.Controls.Add(this.colorPickerButton);
-            this.toolboxPanel.Controls.Add(this.penSizeSlider);
-            this.toolboxPanel.Location = new System.Drawing.Point(20, 50);
-            this.toolboxPanel.Name = "toolboxPanel";
-            this.toolboxPanel.Size = new System.Drawing.Size(100, 400);
-            this.toolboxPanel.TabIndex = 4;
-            // 
-            // colorPickerButton
-            // 
-            this.colorPickerButton.Location = new System.Drawing.Point(3, 84);
-            this.colorPickerButton.Name = "colorPickerButton";
-            this.colorPickerButton.Size = new System.Drawing.Size(97, 38);
-            this.colorPickerButton.TabIndex = 0;
-            this.colorPickerButton.Text = "Color";
-            this.colorPickerButton.Click += new System.EventHandler(this.colorPickerButton_Click);
             // 
             // penSizeSlider
             // 
-            this.penSizeSlider.Location = new System.Drawing.Point(0, 22);
-            this.penSizeSlider.Maximum = 30;
-            this.penSizeSlider.Minimum = 1;
+            this.penSizeSlider.Location = new System.Drawing.Point(12, 74);
+            this.penSizeSlider.Maximum = 50;
             this.penSizeSlider.Name = "penSizeSlider";
-            this.penSizeSlider.Size = new System.Drawing.Size(104, 56);
+            this.penSizeSlider.Size = new System.Drawing.Size(102, 45);
             this.penSizeSlider.TabIndex = 1;
-            this.penSizeSlider.Value = 1;
             this.penSizeSlider.Scroll += new System.EventHandler(this.penSizeSlider_Scroll);
             // 
-            // guessTextBox
+            // label1
             // 
-            this.guessTextBox.Location = new System.Drawing.Point(150, 470);
-            this.guessTextBox.Name = "guessTextBox";
-            this.guessTextBox.Size = new System.Drawing.Size(100, 22);
-            this.guessTextBox.TabIndex = 5;
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(19, 53);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(95, 18);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Pen Width :";
+            // 
+            // canvas
+            // 
+            this.canvas.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.canvas.Location = new System.Drawing.Point(204, 55);
+            this.canvas.Name = "canvas";
+            this.canvas.Size = new System.Drawing.Size(599, 385);
+            this.canvas.TabIndex = 3;
+            this.canvas.TabStop = false;
             // 
             // guessButton
             // 
-            this.guessButton.Location = new System.Drawing.Point(300, 470);
+            this.guessButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.guessButton.Location = new System.Drawing.Point(22, 265);
             this.guessButton.Name = "guessButton";
-            this.guessButton.Size = new System.Drawing.Size(75, 23);
-            this.guessButton.TabIndex = 6;
-            this.guessButton.Text = "Submit";
-            this.guessButton.Click += new System.EventHandler(this.guessButton_Click_1);
+            this.guessButton.Size = new System.Drawing.Size(100, 40);
+            this.guessButton.TabIndex = 5;
+            this.guessButton.Text = "Guess";
+            this.guessButton.UseVisualStyleBackColor = true;
+            this.guessButton.Click += new System.EventHandler(this.guessButton_Click);
             // 
-            // guessesList
+            // guessTextBox
             // 
-            this.guessesList.ItemHeight = 16;
-            this.guessesList.Location = new System.Drawing.Point(650, 50);
-            this.guessesList.Name = "guessesList";
-            this.guessesList.Size = new System.Drawing.Size(200, 372);
-            this.guessesList.TabIndex = 7;
+            this.guessTextBox.Location = new System.Drawing.Point(22, 239);
+            this.guessTextBox.Name = "guessTextBox";
+            this.guessTextBox.Size = new System.Drawing.Size(100, 20);
+            this.guessTextBox.TabIndex = 6;
             // 
-            // wordOptions
+            // colorPickerButton
             // 
-            this.wordOptions.ItemHeight = 16;
-            this.wordOptions.Location = new System.Drawing.Point(200, 200);
-            this.wordOptions.Name = "wordOptions";
-            this.wordOptions.Size = new System.Drawing.Size(200, 68);
-            this.wordOptions.TabIndex = 8;
-            this.wordOptions.Text = "awoiudhaowhfoihowahf";
+            this.colorPickerButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.colorPickerButton.Location = new System.Drawing.Point(22, 125);
+            this.colorPickerButton.Name = "colorPickerButton";
+            this.colorPickerButton.Size = new System.Drawing.Size(100, 40);
+            this.colorPickerButton.TabIndex = 7;
+            this.colorPickerButton.Text = "Pen Color";
+            this.colorPickerButton.UseVisualStyleBackColor = true;
+            this.colorPickerButton.Click += new System.EventHandler(this.colorPickerButton_Click);
             // 
-            // PlayerName
+            // roleLabel
             // 
-            this.PlayerName.AutoSize = true;
-            this.PlayerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PlayerName.Location = new System.Drawing.Point(20, 9);
-            this.PlayerName.Name = "PlayerName";
-            this.PlayerName.Size = new System.Drawing.Size(123, 24);
-            this.PlayerName.TabIndex = 9;
-            this.PlayerName.Text = "PlayerName";
+            this.roleLabel.AutoSize = true;
+            this.roleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.roleLabel.Location = new System.Drawing.Point(442, 20);
+            this.roleLabel.Name = "roleLabel";
+            this.roleLabel.Size = new System.Drawing.Size(83, 18);
+            this.roleLabel.TabIndex = 8;
+            this.roleLabel.Text = "Your Role";
+            // 
+            // eraserButton
+            // 
+            this.eraserButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eraserButton.Location = new System.Drawing.Point(22, 171);
+            this.eraserButton.Name = "eraserButton";
+            this.eraserButton.Size = new System.Drawing.Size(100, 40);
+            this.eraserButton.TabIndex = 9;
+            this.eraserButton.Text = "Eraser";
+            this.eraserButton.UseVisualStyleBackColor = true;
+            this.eraserButton.Click += new System.EventHandler(this.eraserButton_Click);
             // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(917, 605);
-            this.Controls.Add(this.PlayerName);
-            this.Controls.Add(this.canvas);
+            this.Controls.Add(this.eraserButton);
             this.Controls.Add(this.roleLabel);
-            this.Controls.Add(this.toolboxPanel);
+            this.Controls.Add(this.colorPickerButton);
             this.Controls.Add(this.guessTextBox);
             this.Controls.Add(this.guessButton);
-            this.Controls.Add(this.guessesList);
-            this.Controls.Add(this.wordOptions);
+            this.Controls.Add(this.canvas);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.penSizeSlider);
             this.Name = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
-            this.toolboxPanel.ResumeLayout(false);
-            this.toolboxPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.penSizeSlider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private Label PlayerName;
+        private TrackBar penSizeSlider;
+        private Label label1;
+        private PictureBox canvas;
+        private Button guessButton;
+        private TextBox guessTextBox;
+        private Button colorPickerButton;
+        private Label roleLabel;
+        private Button eraserButton;
     }
 }
 

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -14,8 +14,7 @@ namespace server
         private TcpListener _listener;
         private readonly List<TcpClient> _clients = new List<TcpClient>();
         private readonly object _lock = new object(); // For thread safety
-        string correct = "agazzi";
-
+        string correct = "agazzi"; // Placeholder for the correct guess
 
         public static void Main(string[] args)
         {
@@ -50,23 +49,49 @@ namespace server
             NetworkStream stream = client.GetStream();
             byte[] buffer = new byte[1024];
             int bytesRead;
+            StringBuilder messageBuffer = new StringBuilder();
 
             string role;
-
-            role = _clients.Count == 0 ? "Drawer" : "Guesser";
-
-
+            role = _clients.Count == 1 ? "Drawer" : "Guesser";
             string roleMessage = JsonConvert.SerializeObject(new { type = "role", message = role });
             byte[] roleData = Encoding.UTF8.GetBytes(roleMessage + "\n");
-            stream.Write(roleData, 0, roleData.Length);
+            stream.Write(roleData, 0, roleData.Length);  // Send role to client
+
             try
             {
                 while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) != 0)
                 {
-                    string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                    if (IsWin(message)) Console.WriteLine("Hai vinto");
-                    Console.WriteLine($"Received: {message}");
-                    Broadcast(message+"\n", client);
+                    messageBuffer.Append(Encoding.UTF8.GetString(buffer, 0, bytesRead));
+
+                    // Split messages by newline
+                    string[] messages = messageBuffer.ToString().Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    // Clear message buffer and retain any incomplete message for the next round
+                    if (messageBuffer.ToString().EndsWith("\n"))
+                    {
+                        messageBuffer.Clear();
+                    }
+                    else
+                    {
+                        messageBuffer.Clear();
+                        messageBuffer.Append(messages.Last());
+                        messages = messages.Take(messages.Length - 1).ToArray();
+                    }
+
+                    // Process each complete message
+                    foreach (string message in messages)
+                    {
+                        try
+                        {
+                            // Broadcast all received messages (drawing, guesses, etc.)
+                            Broadcast(message + "\n", client);
+                            if (IsWin(message)) Console.WriteLine("Hai vinto");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error processing message: {ex.Message}");
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -85,11 +110,6 @@ namespace server
             }
         }
 
-        private void GiveRoles() 
-        {
-            
-        }
-
         private void Broadcast(string message, TcpClient sender)
         {
             byte[] data = Encoding.UTF8.GetBytes(message);
@@ -98,12 +118,12 @@ namespace server
             {
                 foreach (var client in _clients)
                 {
-                    if (client != sender)
+                    if (client != sender)  // Don't send back to the sender
                     {
                         try
                         {
                             NetworkStream stream = client.GetStream();
-                            stream.Write(data, 0, data.Length);
+                            stream.Write(data, 0, data.Length);  // Send the message to the client
                         }
                         catch (Exception ex)
                         {

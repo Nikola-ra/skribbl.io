@@ -6,42 +6,31 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using System.Xml.Linq;
+using Microsoft.VisualBasic;
 
 namespace GameClient
 {
     public partial class Form1 : Form
     {
-        private PictureBox canvas;
-        private Label roleLabel;
-        private Panel toolboxPanel;
-        private Button colorPickerButton;
-        private TrackBar penSizeSlider;
-        private TextBox guessTextBox;
-        private Button guessButton;
-        private ListBox guessesList;
-        private ListBox wordOptions;
-        /*private TextBox serverIpTextBox;
-        private Button connectButton; */
-
         ColorDialog colorDialog = new ColorDialog();
-
         private TcpClient _client;
         private NetworkStream _stream;
         private Thread _receiveThread;
+        private string _playerName = "";
+        private string _serverIp = "";
 
         private bool _isDrawing = false;
         private Point _previousPoint;
         private Pen _pen = new Pen(Color.Black, 5);
 
+        private StringBuilder messageBuffer = new StringBuilder(); // Buffer for incoming messages
 
-
-        private StringBuilder messageBuffer = new StringBuilder(); //serve come buffer di messaggi in arrivo incompleti(dal server)
         public Form1()
         {
             InitializeComponent();
             _pen.StartCap = _pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
             InitializeGame();
+            CheckForIllegalCrossThreadCalls = false;
             ConnectToServer("127.0.0.1");
         }
 
@@ -54,6 +43,9 @@ namespace GameClient
 
         private void ConnectToServer(string serverIp)
         {
+            _serverIp = Prompt("Enter the server IP:");
+            _playerName = Prompt("Enter your player name:");
+
             try
             {
                 _client = new TcpClient(serverIp, 12345);
@@ -79,7 +71,7 @@ namespace GameClient
                 try
                 {
                     int bytesRead = _stream.Read(buffer, 0, buffer.Length);
-                    if (bytesRead == 0) break; // Connection closed
+                    if (bytesRead == 0) break;
 
                     // Append received data to the buffer
                     messageBuffer.Append(Encoding.UTF8.GetString(buffer, 0, bytesRead));
@@ -94,62 +86,74 @@ namespace GameClient
                 }
             }
         }
+
         private void ProcessMessages()
         {
-            // Split the buffer into complete messages using the delimiter
+            // Split the buffer into complete messages using the newline delimiter
             string[] messages = messageBuffer.ToString().Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            // Nel buffer ci sarà solo il messaggio incompleto
-            if (!messageBuffer.ToString().EndsWith("\n"))
+            // If the buffer doesn't end with a newline, retain the incomplete message for next read
+            if (messageBuffer.ToString().EndsWith("\n"))
             {
-                messageBuffer.Clear();
-                messageBuffer.Append(messages[messages.Length - 1]); // Salvo il messaggio incompleto
-                messages = messages.Take(messages.Length - 1).ToArray();
+                messageBuffer.Clear();  // All data is processed if it ends with a newline.
             }
             else
             {
                 messageBuffer.Clear();
+                messageBuffer.Append(messages.Last()); // Retain the incomplete message for next round
+                messages = messages.Take(messages.Length - 1).ToArray(); // Remove the last incomplete message
             }
 
             // Process each complete message
             foreach (string message in messages)
             {
-                HandleServerMessage(message);
+                try
+                {
+                    HandleServerMessage(message);
+                }
+                catch (JsonReaderException)
+                {
+                    // Skip malformed JSON messages
+                    Console.WriteLine("Invalid JSON message received, skipping...");
+                }
+                catch (Exception ex)
+                {
+                    // Log other types of errors
+                    MessageBox.Show($"Error processing message: {ex.Message}\nMessage: {message}");
+                }
             }
         }
 
         private void HandleServerMessage(string message)
         {
-            // Handle messages (e.g., drawing updates, word choices, guesses)
             try
             {
                 var data = JsonConvert.DeserializeObject<dynamic>(message);
 
+                // Ensure valid "role" type message
                 if (data.type == "role")
                 {
                     if (data.message == "Drawer")
                     {
                         SetDrawerUI();
-                    }else
+                    }
+                    else
                     {
                         SetGuesserUI();
                     }
                 }
 
+                // Handle drawing type message
                 if (data.type == "draw")
                 {
+                    // Ensure we call DrawFromServer to render the line on the Guesser's canvas
                     DrawFromServer((int)data.x1, (int)data.y1, (int)data.x2, (int)data.y2,
                         ColorTranslator.FromHtml((string)data.color), (float)data.size);
                 }
-                else if (data.type == "word")
-                {
-                    string[] words = data.options.ToObject<string[]>();
-                    Invoke(new Action(() => ShowWordOptions(words)));   //Da implementare
-                }
-                else if (data.type == "guess")
-                {
-                    Invoke(new Action(() => guessesList.Items.Add($"{data.player}: {data.word}")));
-                }
+            }
+            catch (JsonReaderException)
+            {
+                Console.WriteLine("Invalid JSON message received, skipping...");
             }
             catch (Exception ex)
             {
@@ -157,20 +161,21 @@ namespace GameClient
             }
         }
 
-        private void ShowWordOptions(string[] words)
-        {
-            wordOptions.Items.Clear();
-            wordOptions.Items.AddRange(words);
-            wordOptions.Visible = true;
-        }
-
         private void DrawFromServer(int x1, int y1, int x2, int y2, Color color, float size)
         {
-            var pen = new Pen(color, size);
-            using (var g = canvas.CreateGraphics())
+            if (canvas.InvokeRequired)
             {
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                g.DrawLine(pen, x1, y1, x2, y2);
+                canvas.Invoke(new Action(() => DrawFromServer(x1, y1, x2, y2, color, size)));
+            }
+            else
+            {
+                Pen serverPen = new Pen(color, size)
+                {
+                    StartCap = System.Drawing.Drawing2D.LineCap.Round,
+                    EndCap = System.Drawing.Drawing2D.LineCap.Round
+                };
+                Graphics g = canvas.CreateGraphics();
+                g.DrawLine(serverPen, x1, y1, x2, y2);
             }
         }
 
@@ -185,13 +190,12 @@ namespace GameClient
             if (_isDrawing)
             {
                 var currentPoint = e.Location;
-                using (var g = canvas.CreateGraphics())
-                {
-                    g.DrawLine(_pen, _previousPoint, currentPoint);
-                }
+                // Draw locally on the canvas
+                DrawLineOnCanvas(_previousPoint.X, _previousPoint.Y, currentPoint.X, currentPoint.Y);
 
-                // Send the drawing update to the server
-                SendDrawingUpdate(_previousPoint, currentPoint, _pen.Color, _pen.Width);
+                // Send the drawing data to the server
+                SendDrawingToServer(_previousPoint.X, _previousPoint.Y, currentPoint.X, currentPoint.Y, _pen.Color, _pen.Width);
+
                 _previousPoint = currentPoint;
             }
         }
@@ -201,20 +205,56 @@ namespace GameClient
             _isDrawing = false;
         }
 
-        private void SendDrawingUpdate(Point start, Point end, Color color, float size)
+        private void DrawLineOnCanvas(int x1, int y1, int x2, int y2)
         {
-            var message = new
+            if (canvas.InvokeRequired)
+            {
+                canvas.Invoke(new Action(() => DrawLineOnCanvas(x1, y1, x2, y2)));
+            }
+            else
+            {
+                Graphics g = canvas.CreateGraphics();
+                g.DrawLine(_pen, x1, y1, x2, y2);
+            }
+        }
+
+        private void SendDrawingToServer(int x1, int y1, int x2, int y2, Color color, float size)
+        {
+            var message = JsonConvert.SerializeObject(new
             {
                 type = "draw",
-                x1 = start.X,
-                y1 = start.Y,
-                x2 = end.X,
-                y2 = end.Y,
+                x1,
+                y1,
+                x2,
+                y2,
                 color = ColorTranslator.ToHtml(color),
                 size
-            };
+            });
 
-            SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message));
+            byte[] data = Encoding.UTF8.GetBytes(message + "\n");
+            _stream.Write(data, 0, data.Length);
+        }
+
+        private void SetGuesserUI()
+        {
+            canvas.Enabled = false;
+            guessTextBox.Visible = true;
+            guessButton.Visible = true;
+            penSizeSlider.Visible = false;
+            eraserButton.Visible = false;
+            colorPickerButton.Visible = false;
+            roleLabel.Text = "You are the Guesser!";
+        }
+
+        private void SetDrawerUI()
+        {
+            canvas.Enabled = true;
+            guessTextBox.Visible = false;
+            guessButton.Visible = false;
+            penSizeSlider.Visible = true;
+            eraserButton.Visible = true;
+            colorPickerButton.Visible = true;
+            roleLabel.Text = "You are the Drawer!";
         }
 
         private void SendMessage(string message)
@@ -230,25 +270,13 @@ namespace GameClient
             }
         }
 
-        private void WordOption_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (wordOptions.SelectedItem != null)
-            {
-                string selectedWord = wordOptions.SelectedItem.ToString();
-                var message = new { type = "wordSelection", word = selectedWord };
-                SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message));
-                wordOptions.Visible = true;
-            }
-        }
-
-        private void guessButton_Click_1(object sender, EventArgs e)
+        private void guessButton_Click(object sender, EventArgs e)
         {
             string guess = guessTextBox.Text;
 
             var message = new
             {
                 type = "guess",
-                /*player = playerNameTextBox.Text,*/
                 word = guess
             };
 
@@ -256,12 +284,16 @@ namespace GameClient
             guessTextBox.Clear();
         }
 
-        private void colorPickerButton_Click(object sender, EventArgs e)
+        private void eraserButton_Click(object sender, EventArgs e)
         {
-            if (colorDialog.ShowDialog() == DialogResult.OK)
-            {
-                _pen.Color = colorDialog.Color;
-            }
+            _pen.Color = Color.White;
+            _pen.Width = 25;
+        }
+
+        // Helper method to prompt for input
+        private string Prompt(string message)
+        {
+            return Interaction.InputBox(message);
         }
 
         private void penSizeSlider_Scroll(object sender, EventArgs e)
@@ -269,24 +301,10 @@ namespace GameClient
             _pen.Width = penSizeSlider.Value;
         }
 
-        private void SetGuesserUI()
+        private void colorPickerButton_Click(object sender, EventArgs e)
         {
-            canvas.Enabled = false; // Disable drawing
-            colorPickerButton.Visible = false;
-            wordOptions.Visible = false;
-            guessTextBox.Enabled = true; // Allow guessing
-            roleLabel.Text = "You are the Guesser!";
+            colorDialog.ShowDialog();
+            _pen.Color = colorDialog.Color;
         }
-
-        private void SetDrawerUI()
-        {
-            canvas.Enabled = true; // Allow drawing
-            colorPickerButton.Visible = true;
-            wordOptions.Visible = true;
-            guessTextBox.Enabled = false; // Disable guessing
-            roleLabel.Text = "You are the Drawer!";
-        }
-
-
     }
 }
