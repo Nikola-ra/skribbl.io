@@ -44,16 +44,19 @@ namespace GameClient
             this.eraserButton = new System.Windows.Forms.Button();
             this.playerNameLabel = new System.Windows.Forms.Label();
             this.wordChoice = new System.Windows.Forms.ComboBox();
+            this.wordLabel = new System.Windows.Forms.Label();
+            this.colorPanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.penSizeSlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.SuspendLayout();
             // 
             // penSizeSlider
             // 
-            this.penSizeSlider.Location = new System.Drawing.Point(16, 105);
+            this.penSizeSlider.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.penSizeSlider.Location = new System.Drawing.Point(25, 105);
             this.penSizeSlider.Maximum = 50;
             this.penSizeSlider.Name = "penSizeSlider";
-            this.penSizeSlider.Size = new System.Drawing.Size(102, 56);
+            this.penSizeSlider.Size = new System.Drawing.Size(102, 45);
             this.penSizeSlider.TabIndex = 1;
             this.penSizeSlider.Scroll += new System.EventHandler(this.penSizeSlider_Scroll);
             // 
@@ -61,9 +64,10 @@ namespace GameClient
             // 
             this.penWidthLabel.AutoSize = true;
             this.penWidthLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.penWidthLabel.Location = new System.Drawing.Point(23, 84);
+            this.penWidthLabel.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.penWidthLabel.Location = new System.Drawing.Point(31, 84);
             this.penWidthLabel.Name = "penWidthLabel";
-            this.penWidthLabel.Size = new System.Drawing.Size(118, 24);
+            this.penWidthLabel.Size = new System.Drawing.Size(95, 18);
             this.penWidthLabel.TabIndex = 2;
             this.penWidthLabel.Text = "Pen Width :";
             // 
@@ -79,9 +83,9 @@ namespace GameClient
             // guessButton
             // 
             this.guessButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.guessButton.Location = new System.Drawing.Point(26, 296);
+            this.guessButton.Location = new System.Drawing.Point(24, 396);
             this.guessButton.Name = "guessButton";
-            this.guessButton.Size = new System.Drawing.Size(100, 40);
+            this.guessButton.Size = new System.Drawing.Size(102, 40);
             this.guessButton.TabIndex = 5;
             this.guessButton.Text = "Guess";
             this.guessButton.UseVisualStyleBackColor = true;
@@ -89,17 +93,17 @@ namespace GameClient
             // 
             // guessTextBox
             // 
-            this.guessTextBox.Location = new System.Drawing.Point(26, 270);
+            this.guessTextBox.Location = new System.Drawing.Point(24, 370);
             this.guessTextBox.Name = "guessTextBox";
-            this.guessTextBox.Size = new System.Drawing.Size(100, 22);
+            this.guessTextBox.Size = new System.Drawing.Size(102, 20);
             this.guessTextBox.TabIndex = 6;
             // 
             // colorPickerButton
             // 
             this.colorPickerButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.colorPickerButton.Location = new System.Drawing.Point(26, 156);
+            this.colorPickerButton.Location = new System.Drawing.Point(24, 156);
             this.colorPickerButton.Name = "colorPickerButton";
-            this.colorPickerButton.Size = new System.Drawing.Size(100, 40);
+            this.colorPickerButton.Size = new System.Drawing.Size(102, 40);
             this.colorPickerButton.TabIndex = 7;
             this.colorPickerButton.Text = "Pen Color";
             this.colorPickerButton.UseVisualStyleBackColor = true;
@@ -109,18 +113,19 @@ namespace GameClient
             // 
             this.roleLabel.AutoSize = true;
             this.roleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.roleLabel.Location = new System.Drawing.Point(442, 20);
+            this.roleLabel.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.roleLabel.Location = new System.Drawing.Point(720, 20);
             this.roleLabel.Name = "roleLabel";
-            this.roleLabel.Size = new System.Drawing.Size(103, 24);
+            this.roleLabel.Size = new System.Drawing.Size(83, 18);
             this.roleLabel.TabIndex = 8;
             this.roleLabel.Text = "Your Role";
             // 
             // eraserButton
             // 
             this.eraserButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.eraserButton.Location = new System.Drawing.Point(26, 202);
+            this.eraserButton.Location = new System.Drawing.Point(24, 202);
             this.eraserButton.Name = "eraserButton";
-            this.eraserButton.Size = new System.Drawing.Size(100, 40);
+            this.eraserButton.Size = new System.Drawing.Size(102, 40);
             this.eraserButton.TabIndex = 9;
             this.eraserButton.Text = "Eraser";
             this.eraserButton.UseVisualStyleBackColor = true;
@@ -129,10 +134,11 @@ namespace GameClient
             // playerNameLabel
             // 
             this.playerNameLabel.AutoSize = true;
-            this.playerNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.playerNameLabel.Location = new System.Drawing.Point(23, 20);
+            this.playerNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.playerNameLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.playerNameLabel.Location = new System.Drawing.Point(12, 9);
             this.playerNameLabel.Name = "playerNameLabel";
-            this.playerNameLabel.Size = new System.Drawing.Size(129, 24);
+            this.playerNameLabel.Size = new System.Drawing.Size(181, 31);
             this.playerNameLabel.TabIndex = 10;
             this.playerNameLabel.Text = "Player Name";
             // 
@@ -141,13 +147,34 @@ namespace GameClient
             this.wordChoice.FormattingEnabled = true;
             this.wordChoice.Location = new System.Drawing.Point(376, 202);
             this.wordChoice.Name = "wordChoice";
-            this.wordChoice.Size = new System.Drawing.Size(241, 24);
+            this.wordChoice.Size = new System.Drawing.Size(241, 21);
             this.wordChoice.TabIndex = 11;
             this.wordChoice.SelectionChangeCommitted += new System.EventHandler(this.wordChoice_SelectionChangeCommitted);
             // 
+            // wordLabel
+            // 
+            this.wordLabel.AutoSize = true;
+            this.wordLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wordLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.wordLabel.Location = new System.Drawing.Point(309, 11);
+            this.wordLabel.Name = "wordLabel";
+            this.wordLabel.Size = new System.Drawing.Size(147, 29);
+            this.wordLabel.TabIndex = 12;
+            this.wordLabel.Text = "Word Label";
+            // 
+            // colorPanel
+            // 
+            this.colorPanel.Location = new System.Drawing.Point(24, 248);
+            this.colorPanel.Name = "colorPanel";
+            this.colorPanel.Size = new System.Drawing.Size(102, 70);
+            this.colorPanel.TabIndex = 13;
+            // 
             // Form1
             // 
+            this.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.ClientSize = new System.Drawing.Size(917, 605);
+            this.Controls.Add(this.colorPanel);
+            this.Controls.Add(this.wordLabel);
             this.Controls.Add(this.wordChoice);
             this.Controls.Add(this.playerNameLabel);
             this.Controls.Add(this.eraserButton);
@@ -177,6 +204,8 @@ namespace GameClient
         private Button eraserButton;
         private Label playerNameLabel;
         private ComboBox wordChoice;
+        private Label wordLabel;
+        private Panel colorPanel;
     }
 }
 

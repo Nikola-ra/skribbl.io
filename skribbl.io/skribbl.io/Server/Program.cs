@@ -13,7 +13,7 @@ namespace server
     {
         private TcpListener _listener;
         private readonly List<TcpClient> _clients = new List<TcpClient>();
-        private readonly object _lock = new object(); // For thread 
+        private readonly object _lock = new object(); 
         string correct;
 
         public static void Main(string[] args)
@@ -55,7 +55,7 @@ namespace server
             role = _clients.Count == 1 ? "Drawer" : "Guesser";
             string roleMessage = JsonConvert.SerializeObject(new { type = "role", message = role });
             byte[] roleData = Encoding.UTF8.GetBytes(roleMessage + "\n");
-            stream.Write(roleData, 0, roleData.Length);  // Send role to client
+            stream.Write(roleData, 0, roleData.Length); 
 
             try
             {
@@ -63,10 +63,8 @@ namespace server
                 {
                     messageBuffer.Append(Encoding.UTF8.GetString(buffer, 0, bytesRead));
 
-                    // Split messages by newline
                     string[] messages = messageBuffer.ToString().Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    // Clear message buffer and retain any incomplete message for the next round
                     if (messageBuffer.ToString().EndsWith("\n"))
                     {
                         messageBuffer.Clear();
@@ -78,7 +76,6 @@ namespace server
                         messages = messages.Take(messages.Length - 1).ToArray();
                     }
 
-                    // Process each complete message
                     foreach (string message in messages)
                     {
                         try
@@ -119,12 +116,12 @@ namespace server
             {
                 foreach (var client in _clients)
                 {
-                    if (client != sender)  // Don't send back to the sender
+                    if (client != sender) 
                     {
                         try
                         {
                             NetworkStream stream = client.GetStream();
-                            stream.Write(data, 0, data.Length);  // Send the message to the client
+                            stream.Write(data, 0, data.Length); 
                         }
                         catch (Exception ex)
                         {
@@ -144,7 +141,7 @@ namespace server
         private void ManageMessage(string message)
         {
             var data = JsonConvert.DeserializeObject<dynamic>(message);
-            if (data.type == "correct") correct = data.word;
+            if (data.type == "correct") correct = data.message;
         }
     }
 }

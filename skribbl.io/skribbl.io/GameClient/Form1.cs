@@ -29,10 +29,10 @@ namespace GameClient
 
         public Form1()
         {
-            InitializeComponent();
-            _pen.StartCap = _pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-            InitializeGame();
             CheckForIllegalCrossThreadCalls = false;
+            _pen.StartCap = _pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+            InitializeComponent();
+            InitializeGame();
             ConnectToServer();
             PopulateWords();
             wordChoice.SelectedIndex = 0;
@@ -43,6 +43,8 @@ namespace GameClient
             canvas.MouseDown += Canvas_MouseDown;
             canvas.MouseMove += Canvas_MouseMove;
             canvas.MouseUp += Canvas_MouseUp;
+            guessTextBox.KeyDown += GuessTextBox_KeyDown;
+            colorPanel.BackColor = _pen.Color;
         }
 
         private void PopulateWords()
@@ -57,6 +59,15 @@ namespace GameClient
             for (int i = 0; i < 3; i++)
             {
                 wordChoice.Items.Add(words[rnd.Next(words.Length)]);
+            }
+        }
+
+        private void GuessTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) 
+            {
+                e.SuppressKeyPress = true; 
+                guessButton.PerformClick(); 
             }
         }
 
@@ -208,10 +219,8 @@ namespace GameClient
             if (_isDrawing)
             {
                 var currentPoint = e.Location;
-                // Draw locally on the canvas
                 DrawLineOnCanvas(_previousPoint.X, _previousPoint.Y, currentPoint.X, currentPoint.Y);
 
-                // Send the drawing data to the server
                 SendDrawingToServer(_previousPoint.X, _previousPoint.Y, currentPoint.X, currentPoint.Y, _pen.Color, _pen.Width);
 
                 _previousPoint = currentPoint;
@@ -261,6 +270,7 @@ namespace GameClient
             wordChoice.Visible = false;
             penSizeSlider.Visible = false;
             eraserButton.Visible = false;
+            wordLabel.Visible = false;
             penWidthLabel.Visible = false;
             colorPickerButton.Visible = false;
             roleLabel.Text = "You are the Guesser!";
@@ -273,6 +283,7 @@ namespace GameClient
             guessButton.Visible = false;
             wordChoice.Visible = true;
             penSizeSlider.Visible = true;
+            wordLabel.Visible = true;
             eraserButton.Visible = true;
             penWidthLabel.Visible = true;
             colorPickerButton.Visible = true;
@@ -311,8 +322,6 @@ namespace GameClient
             _pen.Color = Color.White;
             _pen.Width = 25;
         }
-
-        // Helper method to prompt for input
         private string Prompt(string message)
         {
             return Interaction.InputBox(message);
@@ -327,6 +336,7 @@ namespace GameClient
         {
             colorDialog.ShowDialog();
             _pen.Color = colorDialog.Color;
+            colorPanel.BackColor = _pen.Color;
         }
 
         private void wordChoice_SelectionChangeCommitted(object sender, EventArgs e)
@@ -336,6 +346,7 @@ namespace GameClient
                 type = "correct",
                 message = wordChoice.SelectedItem.ToString()
             };
+            wordLabel.Text = $"The word is: {wordChoice.SelectedItem}";
 
             SendMessage(JsonConvert.SerializeObject(message));
             wordChoice.Visible = false;
