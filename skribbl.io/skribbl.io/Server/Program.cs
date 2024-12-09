@@ -13,8 +13,8 @@ namespace server
     {
         private TcpListener _listener;
         private readonly List<TcpClient> _clients = new List<TcpClient>();
-        private readonly object _lock = new object(); // For thread safety
-        string correct = "agazzi"; // Placeholder for the correct guess
+        private readonly object _lock = new object(); // For thread 
+        string correct;
 
         public static void Main(string[] args)
         {
@@ -84,8 +84,8 @@ namespace server
                         try
                         {
                             Console.WriteLine($"Recieved: {message}");
-                            // Broadcast all received messages (drawing, guesses, etc.)
                             Broadcast(message + "\n", client);
+                            ManageMessage(message);
                             if (IsWin(message)) Console.WriteLine("Hai vinto");
                         }
                         catch (Exception ex)
@@ -138,9 +138,13 @@ namespace server
         private bool IsWin(string message)
         {
             var data = JsonConvert.DeserializeObject<dynamic>(message);
-            if (data == null) return false;
             if (data.type == "guess" && data.word == correct) return true;
             return false;
+        }
+        private void ManageMessage(string message)
+        {
+            var data = JsonConvert.DeserializeObject<dynamic>(message);
+            if (data.type == "correct") correct = data.word;
         }
     }
 }

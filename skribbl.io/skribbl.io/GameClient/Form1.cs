@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace GameClient
 {
@@ -23,7 +25,7 @@ namespace GameClient
         private Point _previousPoint;
         private Pen _pen = new Pen(Color.Black, 5);
 
-        private StringBuilder messageBuffer = new StringBuilder(); // Buffer for incoming messages
+        private StringBuilder messageBuffer = new StringBuilder(); 
 
         public Form1()
         {
@@ -31,7 +33,9 @@ namespace GameClient
             _pen.StartCap = _pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
             InitializeGame();
             CheckForIllegalCrossThreadCalls = false;
-            ConnectToServer("127.0.0.1");
+            ConnectToServer();
+            PopulateWords();
+            wordChoice.SelectedIndex = 0;
         }
 
         private void InitializeGame()
@@ -41,14 +45,30 @@ namespace GameClient
             canvas.MouseUp += Canvas_MouseUp;
         }
 
-        private void ConnectToServer(string serverIp)
+        private void PopulateWords()
+        {
+            string[] words = {"castello", "aeroplano", "bicicletta", "dinosaura", "elefante", "tornado", "laboratorio", "arcobaleno", "candelabro", "oceano",
+    "astronave", "piramide", "tempesta", "vulcano", "sottomarino", "grattacielo", "laboratorio", "ciclope", "cometa", "mummia",
+    "trampolino", "autostrada", "trenino", "galassia", "carro armato", "ponte", "squalo", "scoiattolo", "sottomarino", "corallo",
+    "ragnatela", "finestrino", "occhiale", "frullatore", "paracadute", "capitano", "martello", "ascensore", "pianoforte", "cappello",
+    "cappuccino", "mozzarella", "barca a vela", "serpente", "oceano", "cooperativa", "maschera", "granchio", "torre", "mandarino",
+    "giraffa", "giocattolo", "torretta", "acquario", "martin pescatore", "lavatrice", "sedile", "sciame", "zainetto", "guerriero"};
+            Random rnd = new Random();
+            for (int i = 0; i < 3; i++)
+            {
+                wordChoice.Items.Add(words[rnd.Next(words.Length)]);
+            }
+        }
+
+        private void ConnectToServer()
         {
             _serverIp = Prompt("Enter the server IP:");
             _playerName = Prompt("Enter your player name:");
 
+
             try
             {
-                _client = new TcpClient(serverIp, 12345);
+                _client = new TcpClient(_serverIp, 12345);
                 _stream = _client.GetStream();
 
                 _receiveThread = new Thread(ReceiveMessages);
@@ -89,13 +109,11 @@ namespace GameClient
 
         private void ProcessMessages()
         {
-            // Split the buffer into complete messages using the newline delimiter
             string[] messages = messageBuffer.ToString().Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            // If the buffer doesn't end with a newline, retain the incomplete message for next read
             if (messageBuffer.ToString().EndsWith("\n"))
             {
-                messageBuffer.Clear();  // All data is processed if it ends with a newline.
+                messageBuffer.Clear();
             }
             else
             {
@@ -240,8 +258,10 @@ namespace GameClient
             canvas.Enabled = false;
             guessTextBox.Visible = true;
             guessButton.Visible = true;
+            wordChoice.Visible = false;
             penSizeSlider.Visible = false;
             eraserButton.Visible = false;
+            penWidthLabel.Visible = false;
             colorPickerButton.Visible = false;
             roleLabel.Text = "You are the Guesser!";
         }
@@ -251,8 +271,10 @@ namespace GameClient
             canvas.Enabled = true;
             guessTextBox.Visible = false;
             guessButton.Visible = false;
+            wordChoice.Visible = true;
             penSizeSlider.Visible = true;
             eraserButton.Visible = true;
+            penWidthLabel.Visible = true;
             colorPickerButton.Visible = true;
             roleLabel.Text = "You are the Drawer!";
         }
@@ -305,6 +327,18 @@ namespace GameClient
         {
             colorDialog.ShowDialog();
             _pen.Color = colorDialog.Color;
+        }
+
+        private void wordChoice_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            var message = new
+            {
+                type = "correct",
+                message = wordChoice.SelectedItem.ToString()
+            };
+
+            SendMessage(JsonConvert.SerializeObject(message));
+            wordChoice.Visible = false;
         }
     }
 }
