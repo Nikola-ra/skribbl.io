@@ -17,6 +17,9 @@ namespace server
         private readonly object _lock = new object(); 
         string correct;
 
+        //Dizionario che mi serve per capire se tutti hanno messo pronto dopo una vittoria
+        private readonly Dictionary<TcpClient, bool> _readyStatus = new Dictionary<TcpClient, bool>();
+
         string _winner;
 
         public static void Main(string[] args)
@@ -37,6 +40,7 @@ namespace server
                 lock (_lock)
                 {
                     _clients.Add(client);
+                    _readyStatus[client] = false;
                 }
 
                 Console.WriteLine("Client connected...");
@@ -193,6 +197,42 @@ namespace server
             var data = JsonConvert.DeserializeObject<dynamic>(message);
             if (data.type == "correct") correct = data.message;
             if (data.type == "guess") SendMessageToClient(message, client);
+
+            if (data.type == "ready")
+            {
+                lock (_lock)
+                {
+                    _readyStatus[client] = true;
+                    if (_readyStatus.Values.All(status => status))
+                    {
+                        StartNewGame();
+                    }
+                }
+            }
+        }
+
+        private void StartNewGame()
+        {
+            lock (_lock)
+            {
+                foreach (var key in _readyStatus.Keys.ToList())
+                {
+                    _readyStatus[key] = false;
+                }
+
+                var newDrawerIndex = new Random().Next(_clients.Count);
+                for (int i = 0; i < _clients.Count; i++)
+                {
+                    string role = i == newDrawerIndex ? "Drawer" : "Guesser";
+                    var roleMessage = JsonConvert.SerializeObject(new { type = "role", message = role });
+                    SendMessageToClient(roleMessage, _clients[i]);
+                }
+
+                Thread.Sleep(500);
+                correct = null;
+
+                BroadcastAll(JsonConvert.SerializeObject(new { type = "restart" }) + "\n");
+            }
         }
     }
 }

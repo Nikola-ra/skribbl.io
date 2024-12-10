@@ -21,9 +21,16 @@ namespace GameClient
 
         private void nextButton_Click(object sender, EventArgs e)
         {
-            initialForm.readyCount++;
+            var message = new
+            {
+                type = "ready",
+                player = initialForm._playerName
+            };
+
+            initialForm.SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message));
             this.Hide();
-            initialForm.ShowDialog();
+            initialForm.Show();
+            initialForm.Activate();
         }
 
         private void WinForm_Load(object sender, EventArgs e)

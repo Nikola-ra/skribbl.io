@@ -21,7 +21,7 @@ namespace GameClient
 
 
         public string _winner = "";
-        private string _playerName = "";
+        public string _playerName = "";
         public string _serverIp = "";
         public int readyCount = 0;
 
@@ -56,6 +56,8 @@ namespace GameClient
 
         private void PopulateWords()
         {
+
+            //Oltre a queste parole il disegnatore può scriverne una a suo piacimento, in caso non gli piacciano quelle proposte (non esistono blacklist! ;) )
             string[] words = {"castello", "aeroplano", "bicicletta", "dinosaura", "elefante", "tornado", "laboratorio", "arcobaleno", "candelabro", "oceano",
     "astronave", "piramide", "tempesta", "vulcano", "sottomarino", "grattacielo", "laboratorio", "ciclope", "cometa", "mummia",
     "trampolino", "autostrada", "trenino", "galassia", "carro armato", "ponte", "squalo", "scoiattolo", "sottomarino", "corallo",
@@ -139,7 +141,6 @@ namespace GameClient
                 messages = messages.Take(messages.Length - 1).ToArray();
             }
 
-            // Process each complete message
             foreach (string message in messages)
             {
                 try
@@ -148,12 +149,10 @@ namespace GameClient
                 }
                 catch (JsonReaderException)
                 {
-                    // Skip malformed JSON messages
-                    Console.WriteLine("Invalid JSON message received, skipping...");
+                    Console.WriteLine("Invalid JSON message received");
                 }
                 catch (Exception ex)
                 {
-                    // Log other types of errors
                     MessageBox.Show($"Error processing message: {ex.Message}\nMessage: {message}");
                 }
             }
@@ -165,9 +164,9 @@ namespace GameClient
             {
                 var data = JsonConvert.DeserializeObject<dynamic>(message);
 
-                // Ensure valid "role" type message
                 if (data.type == "role")
                 {
+                    
                     if (data.message == "Drawer")
                     {
                         SetDrawerUI();
@@ -183,10 +182,9 @@ namespace GameClient
                     guessesList.Items.Add($"{data.player} : {data.word}");
                 }
 
-                // Handle drawing type message
                 if (data.type == "draw")
                 {
-                    // Ensure we call DrawFromServer to render the line on the Guesser's canvas
+                    //Con questo riesco a gestire il disegno in modo asincrono, per non crashare a causa di connessioni lente o problemi di Json
                     DrawFromServer((int)data.x1, (int)data.y1, (int)data.x2, (int)data.y2,
                         ColorTranslator.FromHtml((string)data.color), (float)data.size);
                 }
@@ -195,6 +193,20 @@ namespace GameClient
                 {
                     _winner = data.player;
                     HandleWin();
+                }
+
+                
+                
+               if (data.type == "restart")
+                {
+                    guessesList.Items.Clear();
+                    
+                    canvas.Invalidate();
+                    this.Activate();
+                    this.TopMost = false;
+                    MessageBox.Show("New round started!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.TopMost = true;
+
                 }
             }
             catch (JsonReaderException)
@@ -302,7 +314,7 @@ namespace GameClient
 
         private void SetDrawerUI()
         {
-            canvas.Enabled = true;
+            canvas.Enabled = false;
             colorPanel.Visible = true;
             guessTextBox.Visible = false;
             guessButton.Visible = false;
@@ -315,7 +327,7 @@ namespace GameClient
             roleLabel.Text = "You are the Drawer!";
         }
 
-        private void SendMessage(string message)
+        public void SendMessage(string message)
         {
             try
             {
@@ -351,7 +363,7 @@ namespace GameClient
         }
         private string Prompt(string message)
         {
-            return Interaction.InputBox(message);
+            return Interaction.InputBox(message,"Inserisci:", "127.0.0.1");
         }
 
         private void penSizeSlider_Scroll(object sender, EventArgs e)
@@ -377,6 +389,7 @@ namespace GameClient
 
             SendMessage(JsonConvert.SerializeObject(message));
             wordChoice.Visible = false;
+            canvas.Enabled = true;
         }
     }
 }
