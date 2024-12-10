@@ -89,7 +89,7 @@ namespace GameClient
 
             try
             {
-                _client = new TcpClient(_serverIp, 12345);
+                _client = new TcpClient(_serverIp, 50000);
                 _stream = _client.GetStream();
 
                 _receiveThread = new Thread(ReceiveMessages);

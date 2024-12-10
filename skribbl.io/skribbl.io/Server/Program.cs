@@ -30,7 +30,7 @@ namespace server
 
         public void Start()
         {
-            _listener = new TcpListener(IPAddress.Any, 12345);
+            _listener = new TcpListener(IPAddress.Any, 50000);
             _listener.Start();
             Console.WriteLine("Server started...");
 
