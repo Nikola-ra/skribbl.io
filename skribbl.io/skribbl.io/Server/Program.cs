@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 
@@ -33,8 +34,7 @@ namespace server
                 TcpClient client = _listener.AcceptTcpClient();
                 lock (_lock)
                 {
-                    if (_clients.Count < 2) _clients.Add(client);
-                    else Console.WriteLine("Too many clients!");
+                    _clients.Add(client);
                 }
 
                 Console.WriteLine("Client connected...");
@@ -84,8 +84,14 @@ namespace server
                             Broadcast(message + "\n", client);
                             ManageMessage(message);
                             if (IsWin(message)) {
+
+                                var winMessage = JsonConvert.SerializeObject(new
+                                {
+                                    type = "win",
+                                    message = "awdaw"
+                                });
                                 Console.WriteLine("Hai vinto");
-                                Broadcast("qualcosa", client);
+                                BroadcastWin(winMessage + "\n");
                             };
                         }
                         catch (Exception ex)
@@ -130,6 +136,27 @@ namespace server
                         {
                             Console.WriteLine($"Broadcast error: {ex.Message}");
                         }
+                    }
+                }
+            }
+        }
+
+        private void BroadcastWin(string message)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(message);
+
+            lock (_lock)
+            {
+                foreach (var client in _clients)
+                {
+                    try
+                    {
+                        NetworkStream stream = client.GetStream();
+                        stream.Write(data, 0, data.Length);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Broadcast error: {ex.Message}");
                     }
                 }
             }
