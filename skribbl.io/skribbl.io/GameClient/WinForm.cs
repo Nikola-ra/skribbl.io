@@ -12,14 +12,23 @@ namespace GameClient
 {
     public partial class WinForm : Form
     {
+        Form1 initialForm;
         public WinForm(Form1 form)
         {
             InitializeComponent();
+            initialForm = form;
+        }
+
+        private void nextButton_Click(object sender, EventArgs e)
+        {
+            initialForm.readyCount++;
+            this.Hide();
+            initialForm.ShowDialog();
         }
 
         private void WinForm_Load(object sender, EventArgs e)
         {
-
+            winnerLabel.Text = $"{initialForm._winner} Wins!";
         }
     }
 }

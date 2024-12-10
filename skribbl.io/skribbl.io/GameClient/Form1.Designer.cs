@@ -46,6 +46,7 @@ namespace GameClient
             this.wordChoice = new System.Windows.Forms.ComboBox();
             this.wordLabel = new System.Windows.Forms.Label();
             this.colorPanel = new System.Windows.Forms.Panel();
+            this.guessesList = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.penSizeSlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.SuspendLayout();
@@ -169,10 +170,19 @@ namespace GameClient
             this.colorPanel.Size = new System.Drawing.Size(102, 70);
             this.colorPanel.TabIndex = 13;
             // 
+            // guessesList
+            // 
+            this.guessesList.FormattingEnabled = true;
+            this.guessesList.Location = new System.Drawing.Point(805, 58);
+            this.guessesList.Name = "guessesList";
+            this.guessesList.Size = new System.Drawing.Size(192, 381);
+            this.guessesList.TabIndex = 14;
+            // 
             // Form1
             // 
             this.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.ClientSize = new System.Drawing.Size(917, 605);
+            this.ClientSize = new System.Drawing.Size(1042, 605);
+            this.Controls.Add(this.guessesList);
             this.Controls.Add(this.colorPanel);
             this.Controls.Add(this.wordLabel);
             this.Controls.Add(this.wordChoice);
@@ -206,6 +216,7 @@ namespace GameClient
         private ComboBox wordChoice;
         private Label wordLabel;
         private Panel colorPanel;
+        private ListBox guessesList;
     }
 }
 

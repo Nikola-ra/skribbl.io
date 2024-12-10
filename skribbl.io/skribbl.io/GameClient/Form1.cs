@@ -19,8 +19,11 @@ namespace GameClient
         private NetworkStream _stream;
         private Thread _receiveThread;
 
+
+        public string _winner = "";
         private string _playerName = "";
-        private string _serverIp = "";
+        public string _serverIp = "";
+        public int readyCount = 0;
 
         WinForm winForm;
 
@@ -80,7 +83,7 @@ namespace GameClient
         {
             _serverIp = Prompt("Enter the server IP:");
             _playerName = Prompt("Enter your player name:");
-
+            playerNameLabel.Text = _playerName;
 
             try
             {
@@ -175,6 +178,11 @@ namespace GameClient
                     }
                 }
 
+                if (data.type == "guess")
+                {
+                    guessesList.Items.Add($"{data.player} : {data.word}");
+                }
+
                 // Handle drawing type message
                 if (data.type == "draw")
                 {
@@ -185,7 +193,8 @@ namespace GameClient
 
                 if (data.type == "win")
                 {
-                    HandleWin(data.message);
+                    _winner = data.player;
+                    HandleWin();
                 }
             }
             catch (JsonReaderException)
@@ -198,10 +207,10 @@ namespace GameClient
             }
         }
 
-        private void HandleWin(dynamic message)
+        private void HandleWin()
         {
-            winForm.ShowDialog();
             this.Hide();
+            winForm.ShowDialog();
         }
 
         private void DrawFromServer(int x1, int y1, int x2, int y2, Color color, float size)
@@ -279,6 +288,7 @@ namespace GameClient
         private void SetGuesserUI()
         {
             canvas.Enabled = false;
+            colorPanel.Visible = false;
             guessTextBox.Visible = true;
             guessButton.Visible = true;
             wordChoice.Visible = false;
@@ -293,6 +303,7 @@ namespace GameClient
         private void SetDrawerUI()
         {
             canvas.Enabled = true;
+            colorPanel.Visible = true;
             guessTextBox.Visible = false;
             guessButton.Visible = false;
             wordChoice.Visible = true;
@@ -324,8 +335,10 @@ namespace GameClient
             var message = new
             {
                 type = "guess",
+                player = _playerName,
                 word = guess
             };
+
 
             SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message));
             guessTextBox.Clear();

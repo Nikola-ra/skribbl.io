@@ -17,6 +17,8 @@ namespace server
         private readonly object _lock = new object(); 
         string correct;
 
+        string _winner;
+
         public static void Main(string[] args)
         {
             Server server = new Server();
@@ -82,16 +84,17 @@ namespace server
                         {
                             Console.WriteLine($"Recieved: {message}");
                             Broadcast(message + "\n", client);
-                            ManageMessage(message);
+                            ManageMessage(message, client);
+
                             if (IsWin(message)) {
 
                                 var winMessage = JsonConvert.SerializeObject(new
                                 {
                                     type = "win",
-                                    message = "awdaw"
+                                    player = _winner
                                 });
                                 Console.WriteLine("Hai vinto");
-                                BroadcastWin(winMessage + "\n");
+                                BroadcastAll(winMessage + "\n");
                             };
                         }
                         catch (Exception ex)
@@ -141,7 +144,7 @@ namespace server
             }
         }
 
-        private void BroadcastWin(string message)
+        private void BroadcastAll(string message)
         {
             byte[] data = Encoding.UTF8.GetBytes(message);
 
@@ -162,16 +165,34 @@ namespace server
             }
         }
 
+        private void SendMessageToClient(string message, TcpClient client)
+        {
+            try
+            {
+                NetworkStream stream = client.GetStream();
+                byte[] data = Encoding.UTF8.GetBytes(message + "\n");
+                stream.Write(data, 0, data.Length);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending message: {ex.Message}");
+            }
+        }
+
         private bool IsWin(string message)
         {
             var data = JsonConvert.DeserializeObject<dynamic>(message);
-            if (data.type == "guess" && data.word == correct) return true;
+            if (data.type == "guess" && data.word == correct) {
+                _winner = data.player;
+                return true;
+            }
             return false;
         }
-        private void ManageMessage(string message)
+        private void ManageMessage(string message, TcpClient client)
         {
             var data = JsonConvert.DeserializeObject<dynamic>(message);
             if (data.type == "correct") correct = data.message;
+            if (data.type == "guess") SendMessageToClient(message, client);
         }
     }
 }

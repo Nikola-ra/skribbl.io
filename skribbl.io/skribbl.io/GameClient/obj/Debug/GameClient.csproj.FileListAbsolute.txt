@@ -26,3 +26,4 @@ C:\Users\giorg\OneDrive\Documenti\GitHub\skribbl.io\skribbl.io\skribbl.io\GameCl
 C:\Users\giorg\OneDrive\Documenti\GitHub\skribbl.io\skribbl.io\skribbl.io\GameClient\obj\Debug\GameClient.exe
 C:\Users\giorg\OneDrive\Documenti\GitHub\skribbl.io\skribbl.io\skribbl.io\GameClient\obj\Debug\GameClient.pdb
 C:\Users\NIKOLARAHOVIC\Documents\GitHub\skribbl.io\skribbl.io\skribbl.io\GameClient\obj\Debug\GameClient.WinForm.resources
+C:\Users\giorg\OneDrive\Documenti\GitHub\skribbl.io\skribbl.io\skribbl.io\GameClient\obj\Debug\GameClient.WinForm.resources
