@@ -18,8 +18,11 @@ namespace GameClient
         private TcpClient _client;
         private NetworkStream _stream;
         private Thread _receiveThread;
+
         private string _playerName = "";
         private string _serverIp = "";
+
+        WinForm winForm;
 
         private bool _isDrawing = false;
         private Point _previousPoint;
@@ -34,8 +37,7 @@ namespace GameClient
             InitializeComponent();
             InitializeGame();
             ConnectToServer();
-            PopulateWords();
-            wordChoice.SelectedIndex = 0;
+            winForm = new WinForm(this);
         }
 
         private void InitializeGame()
@@ -45,6 +47,8 @@ namespace GameClient
             canvas.MouseUp += Canvas_MouseUp;
             guessTextBox.KeyDown += GuessTextBox_KeyDown;
             colorPanel.BackColor = _pen.Color;
+            PopulateWords();
+            wordChoice.SelectedIndex = 0;
         }
 
         private void PopulateWords()
@@ -55,6 +59,7 @@ namespace GameClient
     "ragnatela", "finestrino", "occhiale", "frullatore", "paracadute", "capitano", "martello", "ascensore", "pianoforte", "cappello",
     "cappuccino", "mozzarella", "barca a vela", "serpente", "oceano", "cooperativa", "maschera", "granchio", "torre", "mandarino",
     "giraffa", "giocattolo", "torretta", "acquario", "martin pescatore", "lavatrice", "sedile", "sciame", "zainetto", "guerriero"};
+
             Random rnd = new Random();
             for (int i = 0; i < 3; i++)
             {
@@ -104,10 +109,8 @@ namespace GameClient
                     int bytesRead = _stream.Read(buffer, 0, buffer.Length);
                     if (bytesRead == 0) break;
 
-                    // Append received data to the buffer
                     messageBuffer.Append(Encoding.UTF8.GetString(buffer, 0, bytesRead));
 
-                    // Process complete messages
                     ProcessMessages();
                 }
                 catch (Exception ex)
@@ -129,8 +132,8 @@ namespace GameClient
             else
             {
                 messageBuffer.Clear();
-                messageBuffer.Append(messages.Last()); // Retain the incomplete message for next round
-                messages = messages.Take(messages.Length - 1).ToArray(); // Remove the last incomplete message
+                messageBuffer.Append(messages.Last());
+                messages = messages.Take(messages.Length - 1).ToArray();
             }
 
             // Process each complete message
@@ -179,6 +182,11 @@ namespace GameClient
                     DrawFromServer((int)data.x1, (int)data.y1, (int)data.x2, (int)data.y2,
                         ColorTranslator.FromHtml((string)data.color), (float)data.size);
                 }
+
+                if (data.type == "win")
+                {
+                    HandleWin(data.message);
+                }
             }
             catch (JsonReaderException)
             {
@@ -188,6 +196,12 @@ namespace GameClient
             {
                 MessageBox.Show($"Error processing message: {ex.Message}\nMessage: {message}");
             }
+        }
+
+        private void HandleWin(dynamic message)
+        {
+            winForm.ShowDialog();
+            this.Hide();
         }
 
         private void DrawFromServer(int x1, int y1, int x2, int y2, Color color, float size)

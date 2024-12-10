@@ -8,13 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace prova
+namespace GameClient
 {
-    public partial class Form1 : Form
+    public partial class WinForm : Form
     {
-        public Form1()
+        public WinForm(Form1 form)
         {
             InitializeComponent();
+        }
+
+        private void WinForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

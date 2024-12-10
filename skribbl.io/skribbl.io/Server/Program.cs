@@ -83,7 +83,10 @@ namespace server
                             Console.WriteLine($"Recieved: {message}");
                             Broadcast(message + "\n", client);
                             ManageMessage(message);
-                            if (IsWin(message)) Console.WriteLine("Hai vinto");
+                            if (IsWin(message)) {
+                                Console.WriteLine("Hai vinto");
+                                Broadcast("qualcosa", client);
+                            };
                         }
                         catch (Exception ex)
                         {
