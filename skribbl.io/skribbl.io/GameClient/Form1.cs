@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+using System.Data;
 
 namespace GameClient
 {
@@ -166,15 +168,18 @@ namespace GameClient
 
                 if (data.type == "role")
                 {
-                    
-                    if (data.message == "Drawer")
+
+                    if (data.message== "Drawer")
                     {
-                        SetDrawerUI();
+                        RunOnUIThread(() => SetDrawerUI());
                     }
-                    else
+                    else if (data.message == "Guesser")
                     {
-                        SetGuesserUI();
+                        RunOnUIThread(() => SetGuesserUI());
                     }
+
+                    this.Invalidate();
+                    this.Refresh();
                 }
 
                 if (data.type == "guess")
@@ -199,13 +204,27 @@ namespace GameClient
                 
                if (data.type == "restart")
                 {
-                    guessesList.Items.Clear();
-                    
-                    canvas.Invalidate();
-                    this.Activate();
-                    this.TopMost = false;
-                    MessageBox.Show("New round started!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.TopMost = true;
+                    RunOnUIThread(() =>
+                    {
+                        guessesList.Items.Clear();
+                        canvas.Invalidate();
+
+                        Label notification = new Label
+                        {
+                            Text = "New round started!",
+                            BackColor = Color.LightYellow,
+                            ForeColor = Color.Black,
+                            AutoSize = true,
+                            Location = new Point(this.Width / 2 - 100, 10),
+                            TextAlign = ContentAlignment.MiddleCenter,
+                        };
+                        this.Controls.Add(notification);
+
+                        Task.Delay(3000).ContinueWith(_ =>
+                        {
+                            RunOnUIThread(() => this.Controls.Remove(notification));
+                        });
+                    });
 
                 }
             }
@@ -216,6 +235,18 @@ namespace GameClient
             catch (Exception ex)
             {
                 MessageBox.Show($"Error processing message: {ex.Message}\nMessage: {message}");
+            }
+        }
+
+        private void RunOnUIThread(Action action)
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(action);
+            }
+            else
+            {
+                action();
             }
         }
 

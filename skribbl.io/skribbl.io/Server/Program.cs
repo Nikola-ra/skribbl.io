@@ -228,7 +228,6 @@ namespace server
                     SendMessageToClient(roleMessage, _clients[i]);
                 }
 
-                Thread.Sleep(500);
                 correct = null;
 
                 BroadcastAll(JsonConvert.SerializeObject(new { type = "restart" }) + "\n");
