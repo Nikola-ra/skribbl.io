@@ -208,6 +208,8 @@ namespace GameClient
                     {
                         guessesList.Items.Clear();
                         canvas.Invalidate();
+                        wordChoice.Items.Clear();
+                        PopulateWords();
 
                         Label notification = new Label
                         {
