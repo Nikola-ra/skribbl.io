@@ -27,7 +27,7 @@ namespace GameClient
                 player = initialForm._playerName
             };
 
-            initialForm.SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message + "\n"));
+            initialForm.SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message));
             this.Hide();
             initialForm.Show();
             initialForm.Activate();
@@ -39,7 +39,7 @@ namespace GameClient
             winnerLabel.Text = $"{initialForm._winner} Wins!";
         }
 
-        private void WinForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void WinForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             var message = new
             {
@@ -47,7 +47,7 @@ namespace GameClient
                 player = initialForm._playerName
             };
 
-            initialForm.SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message + "\n"));
+            initialForm.SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message));
         }
     }
 }

@@ -36,16 +36,10 @@
             // 
             this.winnerLabel.AutoSize = true;
             this.winnerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 50F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-<<<<<<< HEAD
             this.winnerLabel.Location = new System.Drawing.Point(18, 195);
             this.winnerLabel.MaximumSize = new System.Drawing.Size(412, 0);
             this.winnerLabel.Name = "winnerLabel";
             this.winnerLabel.Size = new System.Drawing.Size(267, 152);
-=======
-            this.winnerLabel.Location = new System.Drawing.Point(12, 196);
-            this.winnerLabel.Name = "winnerLabel";
-            this.winnerLabel.Size = new System.Drawing.Size(434, 76);
->>>>>>> parent of 5d28d23 (label sistemata)
             this.winnerLabel.TabIndex = 0;
             this.winnerLabel.Text = "Winner Label";
             // 
@@ -70,7 +64,7 @@
             this.Controls.Add(this.winnerLabel);
             this.Name = "WinForm";
             this.Text = "WinForm";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.WinForm_FormClosed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WinForm_FormClosing);
             this.Load += new System.EventHandler(this.WinForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
