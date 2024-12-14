@@ -117,10 +117,16 @@ namespace server
                 lock (_lock)
                 {
                     _clients.Remove(client);
+                    
+                    if (_readyStatus.Values.All(status => status))
+                    {
+                        StartNewGame();
+                    }
                 }
 
                 client.Close();
                 Console.WriteLine("Client disconnected...");
+
             }
         }
 
