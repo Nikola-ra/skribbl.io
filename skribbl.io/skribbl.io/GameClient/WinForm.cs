@@ -27,7 +27,7 @@ namespace GameClient
                 player = initialForm._playerName
             };
 
-            initialForm.SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message));
+            initialForm.SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message + "\n"));
             this.Hide();
             initialForm.Show();
             initialForm.Activate();
@@ -47,7 +47,7 @@ namespace GameClient
                 player = initialForm._playerName
             };
 
-            initialForm.SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message));
+            initialForm.SendMessage(Newtonsoft.Json.JsonConvert.SerializeObject(message + "\n"));
         }
     }
 }
